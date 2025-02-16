@@ -11,7 +11,9 @@ to develop the backend APIs using Django Rest Framework.
 
 3. Run `docker compose up -d` in terminal to start the API
 
-4. Run `docker compose down` in terminal to stop the API
+4. To run tests `docker exec -it snipbox-api-container python manage.py test` .
+   
+5. Run `docker compose down` in terminal to stop the API
 
 ------------------------------------------------------------
 # Note:
