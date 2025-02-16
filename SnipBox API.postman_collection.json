@@ -1,0 +1,280 @@
+{
+	"info": {
+		"_postman_id": "b6e5a44d-c879-4423-88bf-5de50f60851f",
+		"name": "SnipBox API",
+		"description": "SnipBox is a short note saving app which lets you save short notes and group them together with tags.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "28771492"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Token Authorization \", function () {   ",
+									"     pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Set Environment Variable with token\", function () {",
+									"    var jsonData = JSON.parse(responseBody);",
+									"",
+									"    pm.expect(jsonData.access).to.exist;",
+									"    pm.expect(jsonData.access).to.be.not.null;",
+									"    pm.collectionVariables.set(\"access_token\", jsonData.access);",
+									"",
+									"    pm.expect(jsonData.refresh).to.exist;",
+									"    pm.expect(jsonData.refresh).to.be.not.null;",
+									"    pm.collectionVariables.set(\"refresh_token\", jsonData.refresh);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\" : \"user1\",\n    \"password\" : \"user1password\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/api/auth/login"
+					},
+					"response": []
+				},
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\" : \"user1\",\n    \"password\" : \"user1password\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/api/auth/register"
+					},
+					"response": []
+				},
+				{
+					"name": "Token Refresh",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Token Refresh \", function () {   ",
+									"     pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Set Environment Variable with token\", function () {",
+									"    var jsonData = JSON.parse(responseBody);",
+									"",
+									"    pm.expect(jsonData.access).to.exist;",
+									"    pm.expect(jsonData.access).to.be.not.null;",
+									"    pm.collectionVariables.set(\"access_token\", jsonData.access);",
+									"",
+									"    pm.expect(jsonData.refresh).to.exist;",
+									"    pm.expect(jsonData.refresh).to.be.not.null;",
+									"    pm.collectionVariables.set(\"refresh_token\", jsonData.refresh);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refresh\" : \"{{refresh_token}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/api/auth/token/refresh/"
+					},
+					"response": []
+				}
+			],
+			"description": "Snipbox API user authentication endpoints"
+		},
+		{
+			"name": "Snippets",
+			"item": [
+				{
+					"name": "Overview",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{access_token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/api/snippets"
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{access_token}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\" : \"snippet 1\",\n    \"note\" : \"This is 1st snippet\",\n    \"tags\" : [\n        {\"title\" : \"tag1\"},\n        {\"title\" : \"tag2\"}\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/api/snippets/"
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{access_token}}"
+							}
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\" : \"snippet11\",\n    \"note\" : \"This is first snippet\",\n    \"tags\" : [\n        {\"title\" : \"tag1\"}\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/api/snippets/1/"
+					},
+					"response": []
+				},
+				{
+					"name": "Details",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{access_token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": "{{base_url}}/api/snippets/1/"
+					},
+					"response": []
+				},
+				{
+					"name": "Tags Details",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{access_token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": "{{base_url}}/api/tags/1/"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{access_token}}"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": "{{base_url}}/api/snippets/1/"
+					},
+					"response": []
+				},
+				{
+					"name": "List Tags",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{access_token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/api/tags/"
+					},
+					"response": []
+				}
+			],
+			"description": "Snipbox API snippets and tags CRUD endpoints"
+		}
+	],
+	"variable": [
+		{
+			"key": "access_token",
+			"value": ""
+		},
+		{
+			"key": "refresh_token",
+			"value": ""
+		}
+	]
+}
