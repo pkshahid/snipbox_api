@@ -1,0 +1,18 @@
+networks:
+  my_network:
+
+services:
+
+  api:
+    container_name: snipbox-api-container
+    restart: always
+    build:
+      context: ./snipbox
+    image: 'snipbox_django_rest_api:latest'
+    env_file:
+      - ./ENV/.env
+    volumes:
+      - './snipbox:/app'
+    command: 'python manage.py runserver 0:8000'
+    ports:
+      - '8000:8000'
