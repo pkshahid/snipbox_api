@@ -3,8 +3,8 @@ from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
-from snippets.models import Snippet
-from snippets.serializers import SnippetSerializer
+from snippets.models import Snippet, Tag
+from snippets.serializers import SnippetSerializer, TagSerializer
 
 
 class SnippetViewSet(viewsets.ModelViewSet):
@@ -25,3 +25,24 @@ class SnippetViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return self.queryset.filter(user=self.request.user)
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+
+        # Paginate data
+        paginator = self.pagination_class()
+        paginated_data = paginator.paginate_queryset(queryset, request)
+
+        serializer = self.get_serializer(paginated_data, many=True)
+
+        # Create add detail URL to data
+        snippets = [
+                {
+                    "title" : snippet["title"],
+                    "detail_url" : request.build_absolute_uri(
+                        reverse('snippets-detail', kwargs={'pk': snippet["id"]})
+                        )
+                }
+                for snippet in serializer.data
+            ]
+        return paginator.get_paginated_response(snippets)

@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework.test import APITestCase
 from rest_framework import status
-from snippets.models import Snippet
+from snippets.models import Snippet, Tag
 
 class SnippetAPITestCase(APITestCase):
 
@@ -85,3 +85,35 @@ class SnippetAPITestCase(APITestCase):
             format='json'
             )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_get_snippet_list(self):
+        """
+        Test retrieving snippet list
+        - Call Snippet retrieve endpoint
+        - Check the response code is 200
+        - Check response count is 0.
+        - Check reusult length in response is 0.
+
+        - Create a snippet
+        - Call Snippet retrieve endpoint
+        - Check the response code is 200
+        - Check response count is 1.
+        - Check reusult length in response is 1.
+        """
+
+        # Negative case
+        response = self.client.get('/api/snippets/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['count'], 0)
+        self.assertEqual(len(response.data['results']), 0)
+
+        # Positive Case
+        Snippet.objects.create(
+            title="Existing Snippet",
+            note="Already exists",
+            user=self.user
+            )
+        response = self.client.get('/api/snippets/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['count'], 1)
+        self.assertEqual(len(response.data['results']), 1)

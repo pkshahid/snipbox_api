@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from snippets.models import Snippet
+from snippets.models import Snippet, Tag
 
 
 class SnippetSerializer(serializers.ModelSerializer):
@@ -52,3 +52,8 @@ class SnippetSerializer(serializers.ModelSerializer):
                 instance.tags.remove(id)
             instance.refresh_from_db()
         return instance
+
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = '__all__'
