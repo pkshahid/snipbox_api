@@ -27,6 +27,7 @@ class SnippetViewSet(viewsets.ModelViewSet):
         return self.queryset.filter(user=self.request.user)
 
     def list(self, request, *args, **kwargs):
+        """ Lists snippets and respective detail url """
         queryset = self.get_queryset()
 
         # Paginate data
@@ -46,3 +47,19 @@ class SnippetViewSet(viewsets.ModelViewSet):
                 for snippet in serializer.data
             ]
         return paginator.get_paginated_response(snippets)
+
+    def destroy(self, request, *args, **kwargs):
+        """ Deletes specific snippet and return remaining snippets """
+        instance = self.get_object()
+        instance.delete()             #Deletes selected snippet instance
+
+        # Fetch remaining snippets
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many = True)
+        return Response(
+                        {
+                            "message": "Snippet deleted successfully",
+                            "available_snippets": serializer.data
+                        },
+                        status = status.HTTP_204_NO_CONTENT
+                    )

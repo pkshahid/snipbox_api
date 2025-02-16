@@ -157,3 +157,25 @@ class SnippetAPITestCase(APITestCase):
         self.assertTrue(Tag.objects.filter(title="Test").exists())
         self.assertEqual(Tag.objects.filter(title="Django").count(),1)
         self.assertEqual(Snippet.objects.get(title=self.positive_snippet_data["title"]).tags.count(),2)
+
+    def test_delete_snippet(self):
+        """
+        Test deleting a snippet
+        - Create a snippet
+        - Call Snippet delete endpoint with ID of the snippet
+        - Check the response code is 204
+        - Check the initially created snippet deleted or not
+
+        - Call Snippet delete endpoint with the invalid ID
+        - Check the response code is 404
+        """
+
+        # Positive case
+        snippet = Snippet.objects.create(title = "To be deleted", note = "Delete me", user = self.user)
+        response = self.client.delete(f'/api/snippets/{snippet.id}/')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Snippet.objects.count(), 0)
+
+        # Negative case
+        response = self.client.delete(f'/api/snippets/{snippet.id}/')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
