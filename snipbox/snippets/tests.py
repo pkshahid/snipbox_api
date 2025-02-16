@@ -117,3 +117,43 @@ class SnippetAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['count'], 1)
         self.assertEqual(len(response.data['results']), 1)
+
+    def test_get_snippet_detail(self):
+        """
+        Test retrieving a specific snippet
+        - Call Snippet detail endpoint with invalid ID
+        - Check the response code is 400
+
+        - Create a snippet
+        - Call Snippet detail endpoint with the valid ID
+        - Check the response code is 200
+        - Check title of retrieved snippet in response is same as created.
+        """
+
+        # Nagative case
+        response = self.client.get(f'/api/snippets/{1}/')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+        # Positive case
+        snippet = Snippet.objects.create(title="Detail Test", note="Testing detail", user=self.user)
+        response = self.client.get(f'/api/snippets/{snippet.id}/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['title'], snippet.title)
+
+    def test_tag_create(self):
+        """
+        Test Tag creation and linking
+        - Create a snippet with an existing tag and new tag
+        - Check the response code is 201
+        - Check total tags count is still 2
+        - Check the new tag has created
+        - Check the existing tag count, verify that duplicate is not created.
+        - Check the tags count of the snippet is 2
+        """
+        self.positive_snippet_data['tags'].append({"title": "Test"})
+        response = self.client.post('/api/snippets/', self.positive_snippet_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Tag.objects.count(),2)
+        self.assertTrue(Tag.objects.filter(title="Test").exists())
+        self.assertEqual(Tag.objects.filter(title="Django").count(),1)
+        self.assertEqual(Snippet.objects.get(title=self.positive_snippet_data["title"]).tags.count(),2)
