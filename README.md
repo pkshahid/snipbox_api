@@ -5,11 +5,11 @@ to develop the backend APIs using Django Rest Framework.
 
 # How to run the app
 
-1. Install `docker` and `docker-compose`.
+1. Install `docker` and `docker-compose` in the system.(https://docs.docker.com/engine/install/)
 
 2. Change directory to the path where `compose.yml` file is placed.
 
-3. Run `docker compose up -d` to start the API
+3. Run `docker compose up -d` in terminal to start the API
 
-4. Run `docker compose down` to stop the API
+4. Run `docker compose down` in terminal to stop the API
 
