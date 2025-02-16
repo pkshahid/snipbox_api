@@ -207,3 +207,29 @@ class TagAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["count"], 1)
         self.assertEqual(len(response.data["results"]), 1)
+
+    def test_tag_detail(self):
+        """
+        Test retrieving snippets related to a specific tag
+        - Create a snippet with a tag
+        - Call tag detail endpoint with valid tag id
+        - Check response code is 200
+        - Check tag in title is same as snippet tag
+        - Check the snippet count related to the tag is 1
+
+        - Call tag detail endpoint with invalid tag ID
+        - Check the response code is 404
+        """
+
+        self.client.post('/api/snippets/', self.snippet_data, format='json')
+
+        # Positive case
+        response = self.client.get(f'/api/tags/{self.tag.id}/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["count"], 1)
+        self.assertEqual(response.data["results"]["tag"], self.tag.title)
+        self.assertEqual(len(response.data['results']["snippets"]), 1)
+
+        # Negative case
+        response = self.client.get(f'/api/tags/{42}/')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)

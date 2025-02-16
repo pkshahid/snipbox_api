@@ -74,3 +74,21 @@ class TagViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = TagSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = PageNumberPagination
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+
+        # Fetch all snippets related to the given tag
+        related_snippets = instance.snippet_set.filter(user = request.user)
+
+        # Paginate data
+        paginator = self.pagination_class()
+        paginated_data = paginator.paginate_queryset(related_snippets, request)
+
+        serializer = SnippetSerializer(paginated_data, many = True)
+
+        # Return paginated data response
+        return paginator.get_paginated_response({
+            "tag" : instance.title,
+            "snippets": serializer.data,
+        })
