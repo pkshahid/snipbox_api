@@ -13,3 +13,6 @@ to develop the backend APIs using Django Rest Framework.
 
 4. Run `docker compose down` in terminal to stop the API
 
+------------------------------------------------------------
+# Note:
+This repository contains sample `env` file and values to check the application. Change them as requirement.
