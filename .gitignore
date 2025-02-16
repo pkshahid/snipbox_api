@@ -21,8 +21,8 @@ db.sqlite3
 media/
 
 # Ignore Django migrations (optional, if you want to exclude them)
-**/migrations/*.py
-!**/migrations/__init__.py
+# **/migrations/*.py
+# !**/migrations/__init__.py
 
 # Ignore compiled static files
 staticfiles/
