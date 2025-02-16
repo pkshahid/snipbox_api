@@ -4,14 +4,14 @@ __pycache__/
 *$py.class
 
 # Ignore environment variables & secrets
-.env
-*.env
+# .env
+# *.env
 config/settings/local.py
 config/.env
 
 # Ignore virtual environment
 venv/
-env/
+# env/
 .virtualenv/
 
 # Ignore database & migrations
