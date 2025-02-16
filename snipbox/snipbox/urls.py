@@ -18,12 +18,13 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
-from snippets.views import SnippetViewSet
+from snippets.views import SnippetViewSet, TagViewSet
 
 
 # Router to handle viewsets
 router = DefaultRouter()
 router.register(r'snippets', SnippetViewSet, basename='snippets')
+router.register(r'tags', TagViewSet, basename='tags')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
