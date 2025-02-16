@@ -54,3 +54,34 @@ class SnippetAPITestCase(APITestCase):
         response = self.client.post('/api/snippets/', self.negative_snippet_data, format = 'json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertFalse(Snippet.objects.filter(note = self.negative_snippet_data["note"]).exists())
+
+    def test_update_snippet(self):
+        """
+        Test updating a snippet
+        - Create a snippet
+        - Call Snippet update endpoint with inputs
+        - Check the response code is 200
+        - Check the title of the snippet is same as update input title
+
+        - Call Snippet update endpoint with the valid input
+        - Check the response code is 400
+        """
+
+        # Positve case
+        snippet = Snippet.objects.create(title="Old Title", note="Old Note", user=self.user)
+        response = self.client.put(
+            f'/api/snippets/{snippet.id}/',
+            {"title": "New Title", "note": "New Note", "tags": []},
+            format='json'
+            )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        snippet.refresh_from_db()
+        self.assertEqual(snippet.title, "New Title")
+
+        # Negative case
+        response = self.client.put(
+            f'/api/snippets/{snippet.id}/',
+            {"title": "New Negative Title"},
+            format='json'
+            )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
