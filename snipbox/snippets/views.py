@@ -63,3 +63,14 @@ class SnippetViewSet(viewsets.ModelViewSet):
                         },
                         status = status.HTTP_204_NO_CONTENT
                     )
+
+
+class TagViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    Handles create, retreive, update and destroy operations on Tags.
+    - Overrided retrieve() method to return snippets related to specific tags
+    """
+    queryset = Tag.objects.all().order_by("-id")
+    serializer_class = TagSerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = PageNumberPagination

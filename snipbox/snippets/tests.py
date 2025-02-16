@@ -179,3 +179,31 @@ class SnippetAPITestCase(APITestCase):
         # Negative case
         response = self.client.delete(f'/api/snippets/{snippet.id}/')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+
+class TagAPITestCase(APITestCase):
+
+    def setUp(self):
+        """Setup test user and authentication"""
+        self.user = User.objects.create_user(username='testuser', password='password123')
+        self.client.force_authenticate(user=self.user)
+        self.tag = Tag.objects.create(title="Test_Tag")
+        self.snippet_data = {
+            "title": "Test Snippet",
+            "note": "This is a positive test snippet.",
+            "tags": [{"title": "Test_Tag"}]
+        }
+
+    def test_list_tags(self):
+        """
+        Test retrieving all tags
+        - Call tags list endpoint
+        - Check the response code is 200
+        - Check response count is 1
+        - Check response data length is 1
+        """
+
+        response = self.client.get('/api/tags/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["count"], 1)
+        self.assertEqual(len(response.data["results"]), 1)
