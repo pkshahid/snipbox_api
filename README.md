@@ -7,7 +7,7 @@ to develop the backend APIs using Django Rest Framework.
 
 1. Install `docker` and `docker-compose` in the system.(https://docs.docker.com/engine/install/)
 
-2. Clone the repositiry.
+2. Clone the repository.
 
 3. Change directory to the path where `compose.yml` file is placed.
 
