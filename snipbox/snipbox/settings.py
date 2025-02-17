@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-5!$809pc#258c6@=kai7syd$)5uy=r90atz7#s3g7aez!m=&d^'
+SECRET_KEY = os.getenv('SECRET_KEY','')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG',False)
@@ -84,8 +84,12 @@ WSGI_APPLICATION = 'snipbox.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.getenv('DB_NAME','postgres'),
+        'USER': os.getenv('DB_USER','postgres'),
+        'PASSWORD': os.getenv('DB_PASSWORD','postgres'),
+        'HOST': os.getenv('DB_HOST','db'),
+        'PORT': 5432
     }
 }
 
