@@ -17,4 +17,5 @@ to develop the backend APIs using Django Rest Framework.
 
 ------------------------------------------------------------
 # Note:
-This repository contains sample `env` file and values to check the application. Change them as requirement.
+1. This repository contains sample `env` file and values to check the application. Change them as requirement.
+2. Application is containerized using `db.sqlite3` for ease of use. Can be integrated with other DBMS like PostgreSQL by creating a PostgreSQL service in `compose.yml` and define setup congigurations in django's `settings.py`
